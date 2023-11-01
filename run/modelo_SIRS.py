@@ -5,11 +5,12 @@ import matplotlib.pyplot as plt
 
 def model(variables_population, t):
 
-    H_s = variables_population[0] 
-    H_i = variables_population[1]
+    HS = variables_population[0]
+    HI = variables_population[1]
+    HR = variables_population[2]
 
-    VS = [variables_population[i] for i in range(2, 2+num_species)]
-    VI = [variables_population[i] for i in range(2+num_species, 2+num_species+num_species)]
+    VS = [variables_population[i] for i in range(3, 3+num_species)]
+    VI = [variables_population[i] for i in range(3+num_species, 3+num_species+num_species)]
 
     derivadasVS = list()
     derivadasVI = list()
@@ -18,27 +19,29 @@ def model(variables_population, t):
         interaction_V = 0
         for j in range(num_species):
             if i != j:
-                result = gamma[i][j] * (VS[i] + VI[i])  * (VS[i] + VI[i])
+                result = gamma[i][j] * (VS[i] + VI[i])  * (VS[j] + VI[j])
                 interaction_V += result
 
-        dtVS = r[i] * (VS[i] + VI[i]) - b[i] * p[i] * VS[i] * H_i - u_s[i]* VS[i] + a * (VS[i] + VI[i])  * H_i - interaction_V
-        dtVI = b[i] * p[i] * VS[i] * H_i - u_i[i] * VI[i]
+        dtVS = r[i] * (VS[i] + VI[i]) - beta[i] * rho[i] * VS[i] * HI - mu_S[i]* VS[i] + alpha * (VS[i] + VI[i])  * HI - interaction_V
+        dtVI = beta[i] * rho[i] * VS[i] * HI - mu_I[i] * VI[i]
 
         derivadasVS.append(dtVS)
         derivadasVI.append(dtVI)
 
-    infection_H = 0
+        infection_H = 0
 
     for i in range(num_species):
-        infection_H = b[i] * p[i] * VI[i]
+        infection_H = beta[i] * rho[i] * VI[i]
 
-    dtH_s = r_h * (H_s + H_i) - infection_H * H_s - g_s * H_s
-    dtH_i = infection_H * H_s - g_i * H_i
+    dtHS = r_H * (HS + HI + HR) + tau * HR - infection_H * HS - g_S * HS
+    dtHI = infection_H * HS - g_I * HI
+    dtHR = landa * HI - tau * HR - g_R * HR
 
     derivadas = list()
-    derivadas.append(dtH_s)
-    derivadas.append(dtH_i)
-    
+    derivadas.append(dtHS)
+    derivadas.append(dtHI)
+    derivadas.append(dtHR)
+
     for i in range(len(VS)):
         derivadas.append(derivadasVS[i])
 
