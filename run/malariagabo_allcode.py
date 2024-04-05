@@ -65,7 +65,7 @@ def model(variables_population, t, num_species):
     for i in range(len(VI)):
         derivadas.append(derivadasVI[i])
 
-    return tuple(derivadas)
+    return derivadas
 
 name = 'Results_V1'
 
@@ -91,12 +91,12 @@ for i in range(num_species):
 gamma = gamma + gamma.T
 gamma = gamma/50000000
 
-r_H = 1/1000      # Variable de crecimiento de Host
-g_S = 1/1000  # Variable de muerte de Host Suceptible
-g_I = 1/1000      # Variable de muerte de Host Infectado
-g_R = 1/1000    # Variable de muerte de Host Recuperado
-tau = 1/10000    # Variable de suceptibilisacion ¿?
-lambda_ = 1/10000 # Variable de recuperacion de Host Infectado
+r_H = 1/1000      # Tasa de crecimiento de Host
+g_S = 1/1000  # Tasa de muerte de Host Suceptible
+g_I = 1/1000      # Tasa de muerte de Host Infectado
+g_R = 1/1000    # Tasa de muerte de Host Recuperado
+tau = 1/10000    # Tasa de suceptibilisacion ¿?
+lambda_ = 1/10000 # Tasa de recuperacion de Host Infectado
 
 
 time = 4000
@@ -188,7 +188,7 @@ with open('Variables_{}.csv'.format(name), 'w', newline='') as archivo_csv:
     escritor_csv.writerow(Variables_total_dict)
 
 #Puntos de equilibrio
-HS,HI,HR = sym.symbols('H^S H^I H^R')
+'''HS,HI,HR = sym.symbols('H^S H^I H^R')
 
 VS_1,VS_2,VS_3,VS_4,VS_5,VS_6 = sym.symbols('V^S_1 V^S_2 V^S_3 V^S_4 V^S_5 V^S_6')
 VI_1,VI_2,VI_3,VI_4,VI_5,VI_6 = sym.symbols('V^I_1 V^I_2 V^I_3 V^I_4 V^I_5 V^I_6')
@@ -226,4 +226,4 @@ sym.print_latex(SOLVER)
 
 
 
-"""$\left[ \left( 0.0, \  0.0, \  0.0, \  - 625.0 T, \  - 1428.57142857143 T, \  - 555.555555555556 T, \  - 588.235294117647 T, \  - 1666.66666666667 T, \  - 666.666666666667 T, \  0.0, \  0.0, \  0.0, \  0.0, \  0.0, \  0.0\right)\right]$"""
+"""$\left[ \left( 0.0, \  0.0, \  0.0, \  - 625.0 T, \  - 1428.57142857143 T, \  - 555.555555555556 T, \  - 588.235294117647 T, \  - 1666.66666666667 T, \  - 666.666666666667 T, \  0.0, \  0.0, \  0.0, \  0.0, \  0.0, \  0.0\right)\right]$"""'''
