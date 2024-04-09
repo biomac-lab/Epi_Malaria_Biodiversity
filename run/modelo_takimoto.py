@@ -1,30 +1,33 @@
-# this file is only for modeling - Nicolas
-
-import sympy as sym
+#Import libraries
 import numpy as np 
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
+#Set the seed
 np.random.seed(42)
 
+#Define the parameters of the model
 num_species = 4
-mu_H = 0.01 #Número real
+mu_H = 0.01 #Número real 
 lambda_H = np.random.uniform(1000/3650, 1000/1500) #Número real
 lambda_V = np.random.uniform(5*10**3/3650, 5*10**3/1500,size=num_species)
 gamma = 0.2 #Número real
 tau_HV = np.random.rand(num_species) #Lista de números reales donde cada posición representa la especie i del vector
 tau_VH = np.random.rand(num_species)
 mu_V = np.random.rand(num_species)
-
 sigma_V = np.random.rand(num_species)
 sigma_H = np.random.rand(num_species)
 
+#Define additional functions
 def b_i(V, H):
     return (sigma_V[i]*V*sigma_H[i]*H)/(sigma_V[i]*V + sigma_H[i]*H)
 
+#Define the model function
 def model_HostVectorNspecies(variables, t, mat_a):
+    #The first 2 variables are the host population (humans, S-I)
     H_S = variables[0]
     H_I = variables[1]
+    #The next 2*num_species variables are the vector population of different species (mosquitoes, S-I)
     V_S = [variables[i]  for i in range(2, 2+num_species)]
     V_I = [variables[i]  for i in range(2+num_species, 2+2*num_species)]
     
@@ -70,6 +73,7 @@ for i in range(num_species):
 simu = odeint(model_HostVectorNspecies, condInit, vecTime, args=(mat_a_test, ))
 
 
+#Plot the results
 fig, ax = plt.subplots(2, 3, figsize=(14,8), sharex=True)
 
 ax[0,0].plot(vecTime, simu[:,0], label='Host Susceptible')
