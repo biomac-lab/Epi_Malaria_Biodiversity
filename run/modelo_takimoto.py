@@ -17,10 +17,11 @@ tau_VH = np.random.rand(num_species)
 mu_V = np.random.rand(num_species)
 sigma_V = np.random.rand(num_species)
 sigma_H = np.random.rand(num_species)
+mat_pi = np.random.rand(num_species, num_species)
 
 #Define additional functions
 def b_i(V, H):
-    return (sigma_V[i]*V*sigma_H[i]*H)/(sigma_V[i]*V + sigma_H[i]*H)
+    return (sigma_V[i]*V*sigma_H[i]*H)/(sigma_V[i]*V + sigma_H[i]*H + np.sum([mat_pi[i,j]*sigma_V[j]*V for j in range(num_species)]))
 
 #Define the model function
 def model_HostVectorNspecies(variables, t, mat_a):
@@ -110,3 +111,7 @@ ax[1,1].grid()
 ax[1,1].set_xlabel('Time')
 ax[1,1].set_ylabel('Time')
 ax[1,1].legend(loc='best')
+
+plt.savefig('modelo_takimoto.png')
+
+plt.show()
