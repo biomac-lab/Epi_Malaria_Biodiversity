@@ -2,6 +2,7 @@
 import numpy as np 
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
+from scipy.stats import truncnorm
 
 #Set the seed
 np.random.seed(42)
@@ -22,6 +23,34 @@ mat_pi = np.random.rand(num_species, num_species)
 #Define additional functions
 def b_i(V, H):
     return (sigma_V[i]*V*sigma_H[i]*H)/(sigma_V[i]*V + sigma_H[i]*H + np.sum([mat_pi[i,j]*sigma_V[j]*V for j in range(num_species)]))
+
+def generate_CompetitionMatrix(type:int, L: int):
+    #Dominance scenario
+    if type == 0:
+        mat1 = truncnorm.rvs(a=0, b=1, loc=0.75, scale=1, size=(L,L))
+        mat2 = truncnorm.rvs(a=0, b=1, loc=0.25, scale=1, size=(L,L))
+        for i in range(L):
+            for j in range(L):
+                if i == j:
+                    mat1[i,j] = 0
+                    mat2[i,j] = 0
+                elif i < j:
+                    mat1[i,j] = 0
+                elif i > j:
+                    mat2[i,j] = 0
+        mat_final = mat1 + mat2
+    #High competition scenario
+    elif type == 1:
+        mat_final = truncnorm.rvs(a=0, b=1, loc=0.75, scale=1, size=(L,L))
+        for i in range(L):
+            mat_final[i,i] = 0
+    #Low competition scenario
+    elif type == 2:
+        mat_final = truncnorm.rvs(a=0, b=1, loc=0.25, scale=1, size=(L,L))
+        for i in range(L):
+            mat_final[i,i] = 0
+    return mat_final
+
 
 #Define the model function
 def model_HostVectorNspecies(variables, t, mat_a):
