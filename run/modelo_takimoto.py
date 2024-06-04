@@ -1,4 +1,5 @@
 #Import libraries
+
 import numpy as np 
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
@@ -39,18 +40,20 @@ def generate_CompetitionMatrix(type:int, L: int):
                 elif i > j:
                     mat2[i,j] = 0
         mat_final = mat1 + mat2
+    
     #High competition scenario
     elif type == 1:
         mat_final = truncnorm.rvs(a=0, b=1, loc=0.75, scale=1, size=(L,L))
         for i in range(L):
             mat_final[i,i] = 0
+
     #Low competition scenario
     elif type == 2:
         mat_final = truncnorm.rvs(a=0, b=1, loc=0.25, scale=1, size=(L,L))
         for i in range(L):
             mat_final[i,i] = 0
+    
     return mat_final
-
 
 #Define the model function
 def model_HostVectorNspecies(variables, t, mat_a):
