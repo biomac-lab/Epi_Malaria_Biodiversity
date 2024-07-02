@@ -1,0 +1,5 @@
+run_dir,run
+plots_dir,plots 
+params_dir,params
+results_dir,results
+param_search,run/param_search/

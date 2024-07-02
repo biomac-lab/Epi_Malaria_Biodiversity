@@ -9,6 +9,40 @@ import csv
 #Set the seed
 np.random.seed(0)
 
+name = 'Results_V1'
+
+variables_population = (1000,100,0,                               # Variables iniciales de HOST (S,I,R)
+                        10000,10000,10000,10000,10000,10000,      # Variables iniciales de Vectores Suceptible (V1,V2,...,V5,V6)
+                        1000,1000,1000,1000,1000,1000)            # Variables inicialed de Vectores Infectados (V1,V2,...,V5,V6)
+
+num_species = 6                                                     # Numero de especies en el modelo
+r = [3/1000,3/1000,3/1000,3/1000,3/1000,3/1000]       # Variables de crecimiento de Vectores (V1,V2,...,V5,V6)
+beta = [0.1/5000,0.1/5000,0.1/5000,0.1/5000,0.1/5000,0.1/5000]          # Variables de biting rate de Vectores (V1,V2,...,V5,V6)
+rho = [0.02,0.02,0.02,0.02,0.02,0.02]                                   # Variables de probabilidad de infectar de los Vectores (V1,V2,...,V5,V6)
+mu_S = [0.4/1000,0.4/1000,0.4/1000,0.4/1000,0.4/1000,0.4/1000]                      # Variables de muerte de Vectores Suceptibles (V1,V2,...,V5,V6)
+mu_I = [1.1/1000,1.1/1000,1.1/1000,1.1/1000,1.1/1000,1.1/1000]                      # Variables de muerte de Vectores Infectados (V1,V2,...,V5,V6)
+
+np.random.seed(0)
+#gamma =np.zeros((6,6))                                          # Matriz de interaccion NULA
+gamma = np.zeros((num_species, num_species))
+
+for i in range(num_species):
+    for j in range(i+1, num_species):
+        random = np.random.randint(1,9)
+        gamma[i][j] =  random
+gamma = gamma + gamma.T
+gamma = gamma/50000000
+
+r_H = 1/1000      # Tasa de crecimiento de Host
+g_S = 1/1000  # Tasa de muerte de Host Suceptible
+g_I = 1/1000      # Tasa de muerte de Host Infectado
+g_R = 1/1000    # Tasa de muerte de Host Recuperado
+tau = 1/10000    # Tasa de suceptibilisacion ¿?
+lambda_ = 1/10000 # Tasa de recuperacion de Host Infectado
+time = 4000
+vecTime = np.linspace(0, time,time)      # Vector de Tiempo
+
+
 #Define the model function
 def model(variables_population, t, num_species):
 
@@ -67,40 +101,6 @@ def model(variables_population, t, num_species):
 
     return derivadas
 
-name = 'Results_V1'
-
-variables_population = (1000,100,0,                               # Variables iniciales de HOST (S,I,R)
-                        10000,10000,10000,10000,10000,10000,      # Variables iniciales de Vectores Suceptible (V1,V2,...,V5,V6)
-                        1000,1000,1000,1000,1000,1000)            # Variables inicialed de Vectores Infectados (V1,V2,...,V5,V6)
-
-num_species = 6                                                     # Numero de especies en el modelo
-r = [3/1000,3/1000,3/1000,3/1000,3/1000,3/1000]       # Variables de crecimiento de Vectores (V1,V2,...,V5,V6)
-beta = [0.1/5000,0.1/5000,0.1/5000,0.1/5000,0.1/5000,0.1/5000]          # Variables de biting rate de Vectores (V1,V2,...,V5,V6)
-rho = [0.02,0.02,0.02,0.02,0.02,0.02]                                   # Variables de probabilidad de infectar de los Vectores (V1,V2,...,V5,V6)
-mu_S = [0.4/1000,0.4/1000,0.4/1000,0.4/1000,0.4/1000,0.4/1000]                      # Variables de muerte de Vectores Suceptibles (V1,V2,...,V5,V6)
-mu_I = [1.1/1000,1.1/1000,1.1/1000,1.1/1000,1.1/1000,1.1/1000]                      # Variables de muerte de Vectores Infectados (V1,V2,...,V5,V6)
-
-np.random.seed(0)
-#gamma =np.zeros((6,6))                                          # Matriz de interaccion NULA
-gamma = np.zeros((num_species, num_species))
-
-for i in range(num_species):
-    for j in range(i+1, num_species):
-        random = np.random.randint(1,9)
-        gamma[i][j] =  random
-gamma = gamma + gamma.T
-gamma = gamma/50000000
-
-r_H = 1/1000      # Tasa de crecimiento de Host
-g_S = 1/1000  # Tasa de muerte de Host Suceptible
-g_I = 1/1000      # Tasa de muerte de Host Infectado
-g_R = 1/1000    # Tasa de muerte de Host Recuperado
-tau = 1/10000    # Tasa de suceptibilisacion ¿?
-lambda_ = 1/10000 # Tasa de recuperacion de Host Infectado
-
-
-time = 4000
-vecTime = np.linspace(0, time,time)      # Vector de Tiempo
 
 solve = odeint(model,variables_population, vecTime, args=(num_species,))
 
