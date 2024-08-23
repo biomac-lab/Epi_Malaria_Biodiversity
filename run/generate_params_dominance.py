@@ -62,17 +62,41 @@ def generate_CompetitionMatrix(type:int, L: int):
 scenarios = 20
 cont = 0
 dict_type = {0: 'domi', 1: 'high', 2: 'low'}
+
+fig, axes = plt.subplots(3,3)
 for type1 in range(3):
     for type2 in range(3):
+        array_a = np.zeros((scenarios*num_species**2))
+        array_pi = np.zeros((scenarios*num_species**2))
         while cont < scenarios:
             mat_a = generate_CompetitionMatrix(type1, num_species)
             mat_pi = generate_CompetitionMatrix(type2, num_species)
+
+            array_a[num_species**2*cont:(num_species**2*(cont+1))] = mat_a.flatten()
+            array_pi[num_species**2*cont:(num_species**2*(cont+1))] = mat_pi.flatten()
 
             if not os.path.exists(os.path.join('params',str(num_species),dict_type[type1]+'_'+dict_type[type2])):
                 os.makedirs(os.path.join('params',str(num_species),dict_type[type1]+'_'+dict_type[type2]))
             
             np.save(os.path.join('params',str(num_species),dict_type[type1]+'_'+dict_type[type2],'mat_a_'+str(cont)), mat_a)
             np.save(os.path.join('params',str(num_species),dict_type[type1]+'_'+dict_type[type2],'mat_pi_'+str(cont)), mat_pi)
-
+            
             cont += 1
         cont = 0
+
+        axes[type1, type2].hist(array_a, alpha=0.5, label=r'$\alpha$')
+        axes[type1, type2].hist(array_pi, alpha=0.5, label=r'$\pi$')
+        
+        if type1 == 2 and type2 == 2:
+            axes[type1, type2].legend()
+
+        if type2 == 0:
+            axes[type1, type2].set_ylabel(dict_type[type1])
+
+        if type1 == 0:
+            axes[type1, type2].set_title(dict_type[type2])
+
+fig.suptitle(r'Escenarios of $\pi$')
+fig.supylabel(r'Escenarios of $\alpha$')
+fig.show()
+fig.savefig(os.path.join('params',str(num_species),'hist_experimentationScenarios.jpeg'), dpi=600)
