@@ -32,8 +32,8 @@ p_V_Infected = np.random.uniform(0, 0.9, size=num_species)
 def generate_CompetitionMatrix(type:int, L: int):
     #Dominance scenario
     if type == 0:
-        mat1 = truncnorm.rvs(a=0, b=1, loc=0.75, scale=1, size=(L,L))
-        mat2 = truncnorm.rvs(a=0, b=1, loc=0.25, scale=1, size=(L,L))
+        mat1 = truncnorm.rvs(a=(0-0.75)/1, b=(1-0.75)/1, loc=0.75, scale=1, size=(L,L))
+        mat2 = truncnorm.rvs(a=(0-0.25)/1, b=(1-0.25)/1, loc=0.25, scale=1, size=(L,L))
         for i in range(L):
             for j in range(L):
                 if i == j:
@@ -84,9 +84,9 @@ for type1 in range(3):
             cont += 1
         cont = 0
 
-        axes[type1, type2].hist(array_a, alpha=0.5, label=r'$\alpha$')
-        axes[type1, type2].hist(array_pi, alpha=0.5, label=r'$\pi$')
-        
+        axes[type1, type2].hist(array_a, alpha=0.5, label=r'$\alpha$', range=(0,1))
+        axes[type1, type2].hist(array_pi, alpha=0.5, label=r'$\pi$', range=(0,1))
+
         if type1 == 2 and type2 == 2:
             axes[type1, type2].legend()
 
