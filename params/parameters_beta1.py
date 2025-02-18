@@ -22,4 +22,4 @@ g_i = 1.2/1000       # Variable de muerte de HOst Infectado
 
 num_species = 6     # Numero de especies en el modelo
 
-vecTime = np.linspace(0,1000,1000)      # Vector de Tiempo
+vecTime = np.linspace(0,1000,1000)  # Vector de Tiempo
